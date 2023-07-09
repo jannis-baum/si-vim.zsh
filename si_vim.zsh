@@ -28,13 +28,13 @@ autoload -U add-zsh-hook
 
 # ensure si_vim is always running
 function _si_vim_run() {
-    _si_vim_isrunning || _si_vim_job &
+    (( ${+SI_VIM_DISABLED} )) || _si_vim_isrunning || _si_vim_job &
 }
 add-zsh-hook precmd _si_vim_run
 
 # keep si_vim in same directory as zsh
 function _si_vim_syncpwd() {
-    _si_vim_cmd "cd $(pwd)"
+    (( ${+SI_VIM_DISABLED} )) || _si_vim_cmd "cd $(pwd)"
 }
 add-zsh-hook chpwd _si_vim_syncpwd
 
@@ -81,4 +81,12 @@ function siv() {
         done
     fi
     fg %_si_vim_job
+}
+
+function siv-enable() {
+    unset SI_VIM_DISABLED
+}
+
+function siv-disable() {
+    export SI_VIM_DISABLED
 }
