@@ -67,7 +67,7 @@ stty eof undef
 # open file in running si_vim
 # create directories if needed for new file
 # supports running additional commands in vim prefixed by +
-function v() {
+function siv() {
     if ! [[ $# == 0 ]]; then
         for arg in $@; do
             if [[ $arg =~ '^\+' ]]; then
