@@ -39,7 +39,8 @@ function _si_vim_syncpwd() {
 add-zsh-hook chpwd _si_vim_syncpwd
 
 # KEYBINDINGS ------------------------------------------------------------------
-# ctrl-u to bring up si_vim
+# bring up si_vim
+# user has to configure binding, e.g. `bindkey ^u _si_vim_widget`
 _si_vim_widget() {
     BUFFER="fg %_si_vim_job"
     zle accept-line; zle reset-prompt
