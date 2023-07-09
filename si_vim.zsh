@@ -45,7 +45,6 @@ _si_vim_widget() {
     zle accept-line; zle reset-prompt
 }
 zle -N _si_vim_widget
-bindkey ^u _si_vim_widget
 
 # safely quit vim & shell if no unsaved changes
 _si_vim_safe_exit() {
