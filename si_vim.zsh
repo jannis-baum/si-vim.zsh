@@ -59,9 +59,11 @@ _si_vim_safe_exit() {
     exit
 }
 zle -N _si_vim_safe_exit
-bindkey '^d' _si_vim_safe_exit
-# prevent ^d from sending eof
-stty eof undef
+if ! (( ${+SI_VIM_NO_CTRL_D} )); then
+    bindkey '^d' _si_vim_safe_exit
+    # prevent ^d from sending eof
+    stty eof undef
+fi
 
 # USER FUNCTIONS ---------------------------------------------------------------
 # open file in running si_vim
