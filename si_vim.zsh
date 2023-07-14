@@ -71,13 +71,17 @@ fi
 # supports running additional commands in vim prefixed by +
 function siv() {
     if ! [[ $# == 0 ]]; then
+        local -a cmd_buffer
         for arg in $@; do
             if [[ $arg =~ '^\+' ]]; then
-                _si_vim_cmd "$(sed -e 's/"/\\"/g' -e 's/^\+\(.*\)/:exec "\1"/' <<< $arg)"
+                cmd_buffer+=("$(sed -e 's/"/\\"/g' -e 's/^\+\(.*\)/:exec "\1"/' <<< $arg)")
             else
                 mkdir -p $(dirname $arg)
                 _si_vim_cmd "SivOpen $arg"
             fi
+        done
+        for cmd in $cmd_buffer; do
+            _si_vim_cmd "$cmd"
         done
     fi
     fg %_si_vim_job
