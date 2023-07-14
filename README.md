@@ -20,6 +20,9 @@ instantly.
   `$SI_VIM_NO_CTRL_D` before sourcing this plugin).
 - disable/enable automatically keeping Vim open with `siv-[en|dis]able` or by
   setting/unsetting the environment variable `$SI_VIM_DISABLED`
+- `siv` also supports running startup commands from arguments with the `+`
+  prefix like Vim and will create all directories that don't exist for the given
+  file path
 
 ### Keybindings
 
