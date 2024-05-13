@@ -56,6 +56,7 @@ _si_vim_safe_exit() {
     fi
     _si_vim_cmd ":qa"
     fg %_si_vim_job
+    rm -f $_si_vim_resume_source $_si_vim_modified
     exit
 }
 zle -N _si_vim_safe_exit
