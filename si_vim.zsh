@@ -2,6 +2,14 @@
 # always keeps one instance of vim running in the background ready to be used
 # for anything
 
+# (N)VIM EXECUTABLE ------------------------------------------------------------
+# figure out how to launch vim/nvim
+if command -v nvim &> /dev/null; then
+    _si_vim_exec=nvim
+else
+    _si_vim_exec=vim
+fi
+
 # COMMAND BUFFER ---------------------------------------------------------------
 # file that vim sources when it is taken to foreground
 _si_vim_resume_source_dir=$HOME/.local/state/si-vim
@@ -16,7 +24,7 @@ function _si_vim_cmd() {
 # JOB --------------------------------------------------------------------------
 # function to find job name in list
 function _si_vim_job() {
-    SIVIM_RESUME_SOURCE=$_si_vim_resume_source SIVIM_MARK_MODIFIED=$_si_vim_modified vim
+    SIVIM_RESUME_SOURCE=$_si_vim_resume_source SIVIM_MARK_MODIFIED=$_si_vim_modified $_si_vim_exec
 }
 # check if si_vim is running
 function _si_vim_isrunning() {
