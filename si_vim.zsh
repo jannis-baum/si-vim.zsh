@@ -4,7 +4,7 @@
 
 # COMMAND BUFFER ---------------------------------------------------------------
 # file that vim sources when it is taken to foreground
-_si_vim_resume_source_dir=$HOME/.vim/resume-source
+_si_vim_resume_source_dir=$HOME/.local/state/si-vim
 mkdir -p $_si_vim_resume_source_dir
 _si_vim_resume_source=$_si_vim_resume_source_dir/$$.vim
 _si_vim_modified=$_si_vim_resume_source.modified
