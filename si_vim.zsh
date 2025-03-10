@@ -35,10 +35,12 @@ function _si_vim_isrunning() {
 autoload -U add-zsh-hook
 
 # ensure si_vim is always running
-function _si_vim_run() {
+function _si_vim_precmd() {
+    # signal handling can break from re-entering after suspending vim
+    trap - SIGINT
     (( ${+SI_VIM_DISABLED} )) || _si_vim_isrunning || _si_vim_job &
 }
-add-zsh-hook precmd _si_vim_run
+add-zsh-hook precmd _si_vim_precmd
 
 # keep si_vim in same directory as zsh
 function _si_vim_syncpwd() {
