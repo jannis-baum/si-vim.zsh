@@ -52,10 +52,36 @@ function _si_vim_syncpwd() {
 add-zsh-hook chpwd _si_vim_syncpwd
 
 # KEYBINDINGS ------------------------------------------------------------------
+# get current cursor line, works from ZLE
+_si_vim_curpos() {
+    local curpos
+    printf "\e[6n" > /dev/tty
+    read -sdR curpos < /dev/tty
+    # extract part between `[` and `;`
+    curpos=${${curpos#*\[}%;*}
+    echo $curpos
+}
+
+# reset prompt to line $1 after widget
+_si_vim_widget_reset_prompt() {
+    # check how many lines down we are
+    local diff=$(( $(_si_vim_curpos) - $1 ))
+    for _ in {1..$diff}; do
+        # go one line up and clear it
+        printf "\e[1A\r\e[K"
+    done
+    zle reset-prompt
+}
+
 # bring up si_vim
 # user has to configure binding, e.g. `bindkey ^u _si_vim_widget`
 _si_vim_widget() {
+    local curpos="$(_si_vim_curpos)"
+    echo "cur before $curpos" >> ~/Desktop/si_vim_widget_reset_prompt.txt
     _si_vim_fg
+    # reset prompt after we're back
+    _si_vim_widget_reset_prompt $curpos
+
 }
 zle -N _si_vim_widget
 
