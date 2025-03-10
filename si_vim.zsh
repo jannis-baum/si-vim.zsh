@@ -30,6 +30,9 @@ function _si_vim_job() {
 function _si_vim_isrunning() {
     [[ -n "$(jobs | grep '_si_vim_job')" ]]
 }
+function _si_vim_fg() {
+    fg %_si_vim_job
+}
 
 # HOOKS ------------------------------------------------------------------------
 autoload -U add-zsh-hook
@@ -52,8 +55,7 @@ add-zsh-hook chpwd _si_vim_syncpwd
 # bring up si_vim
 # user has to configure binding, e.g. `bindkey ^u _si_vim_widget`
 _si_vim_widget() {
-    BUFFER="fg %_si_vim_job"
-    zle accept-line; zle reset-prompt
+    _si_vim_fg
 }
 zle -N _si_vim_widget
 
@@ -65,7 +67,7 @@ _si_vim_safe_exit() {
         return
     fi
     _si_vim_cmd ":qa"
-    fg %_si_vim_job
+    _si_vim_fg
     rm -f $_si_vim_resume_source $_si_vim_modified
     exit
 }
@@ -95,7 +97,7 @@ function siv() {
             _si_vim_cmd "$cmd"
         done
     fi
-    fg %_si_vim_job
+    _si_vim_fg
 }
 
 function siv-enable() {
