@@ -77,7 +77,6 @@ _si_vim_widget_reset_prompt() {
 # user has to configure binding, e.g. `bindkey ^u _si_vim_widget`
 _si_vim_widget() {
     local curpos="$(_si_vim_curpos)"
-    echo "cur before $curpos" >> ~/Desktop/si_vim_widget_reset_prompt.txt
     _si_vim_fg
     # reset prompt after we're back
     _si_vim_widget_reset_prompt $curpos
