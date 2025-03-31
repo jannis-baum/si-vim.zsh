@@ -57,8 +57,9 @@ _si_vim_curpos() {
     local curpos
     printf "\e[6n" > /dev/tty
     read -sdR curpos < /dev/tty
-    # extract part between `[` and `;`
-    curpos=${${curpos#*\[}%;*}
+    # extract line
+    curpos=${curpos##*\[} # remove everything before the last `[`
+    curpos=${curpos%%;*}  # remove everything after the first `;`
     echo $curpos
 }
 
