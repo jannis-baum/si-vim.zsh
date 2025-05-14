@@ -25,14 +25,7 @@ function! s:SivOpen(file)
         endif
     endfor
 
-    " if the buffer is empty, e.g. when we just opened vim without a file, we
-    " edit the file in the current buffer
-    if (expand('%:p') == '')
-        execute 'edit ' . a:file
-    else
-        " else we open the file in a new tab
-        execute 'tabedit ' . a:file
-    endif
+    execute 'edit ' . a:file
     " fix some problem with ft detection
     filetype detect
 endfunction
