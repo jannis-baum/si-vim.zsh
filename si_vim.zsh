@@ -22,28 +22,26 @@ function _si_vim_cmd() {
 }
 
 # JOB --------------------------------------------------------------------------
-# function to find job name in list
-function _si_vim_job() {
-    SIVIM_RESUME_SOURCE=$_si_vim_resume_source SIVIM_MARK_MODIFIED=$_si_vim_modified $_si_vim_exec
-}
-# check if si_vim is running
-function _si_vim_isrunning() {
-    [[ -n "$(jobs | grep '_si_vim_job')" ]]
-}
-function _si_vim_fg() {
-    fg %_si_vim_job
+# start background job if not running & set job_id
+function _si_vim_run() {
+    # check if si_vim is already running
+    # write jobs to temporary file because calling `jobs` with a pipe doesn't
+    # produce correct output
+    local jobs_file="$(mktemp)"
+    jobs -l > "$jobs_file"
+    local si_vim_job="$(cat "$jobs_file" | grep 'SIVIM')"
+    rm "$jobs_file"
+
+    if [[ -z "$si_vim_job" ]]; then
+        # no job running, start new
+        SIVIM_RESUME_SOURCE=$_si_vim_resume_source SIVIM_MARK_MODIFIED=$_si_vim_modified $_si_vim_exec &
+    fi
+    # bring running job to foreground
+    fg %SIVIM
 }
 
 # HOOKS ------------------------------------------------------------------------
 autoload -U add-zsh-hook
-
-# ensure si_vim is always running
-function _si_vim_precmd() {
-    # signal handling can break from re-entering after suspending vim
-    trap - SIGINT
-    (( ${+SI_VIM_DISABLED} )) || _si_vim_isrunning || _si_vim_job &
-}
-add-zsh-hook precmd _si_vim_precmd
 
 # keep si_vim in same directory as zsh
 function _si_vim_syncpwd() {
@@ -78,7 +76,7 @@ _si_vim_widget_reset_prompt() {
 # user has to configure binding, e.g. `bindkey ^u _si_vim_widget`
 _si_vim_widget() {
     local curpos="$(_si_vim_curpos)"
-    _si_vim_fg
+    _si_vim_run
     # reset prompt after we're back
     _si_vim_widget_reset_prompt $curpos
 
@@ -93,7 +91,7 @@ _si_vim_safe_exit() {
         return
     fi
     _si_vim_cmd ":qa"
-    _si_vim_fg
+    _si_vim_run
     rm -f $_si_vim_resume_source $_si_vim_modified
     exit
 }
@@ -123,7 +121,7 @@ function siv() {
             _si_vim_cmd "$cmd"
         done
     fi
-    _si_vim_fg
+    _si_vim_run
 }
 
 function siv-enable() {
