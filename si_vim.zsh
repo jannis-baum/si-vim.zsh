@@ -121,7 +121,9 @@ function siv() {
             _si_vim_cmd "$cmd"
         done
     fi
-    _si_vim_run
+    # if `siv` is called from widget we can run si-vim widget to clear job
+    # control logs & reset the prompt cleanly, if not we just run
+    zle && _si_vim_widget || _si_vim_run
 }
 
 function siv-enable() {
