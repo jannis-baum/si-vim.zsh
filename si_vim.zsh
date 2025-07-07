@@ -114,7 +114,7 @@ function siv() {
                 cmd_buffer+=("$(sed -e 's/"/\\"/g' -e 's/^\+\(.*\)/:exec "\1"/' <<< $arg)")
             else
                 mkdir -p $(dirname $arg)
-                _si_vim_cmd "SivOpen $arg"
+                _si_vim_cmd "edit $arg"
             fi
         done
         for cmd in $cmd_buffer; do

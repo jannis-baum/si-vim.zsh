@@ -1,10 +1,15 @@
+function! s:OnResume(_)
+    if filereadable($SIVIM_RESUME_SOURCE)
+        execute('source ' . $SIVIM_RESUME_SOURCE)
+        call delete($SIVIM_RESUME_SOURCE)
+    endif
+endfunction
+
 augroup Suspension
     autocmd!
-    " execute commands after resuming from suspension
-    autocmd VimResume,VimEnter * if filereadable($SIVIM_RESUME_SOURCE)
-            \| execute('source ' . $SIVIM_RESUME_SOURCE)
-            \| call delete($SIVIM_RESUME_SOURCE)
-        \| endif
+    " execute commands after resuming from suspension, with 0-timer to run it on
+    " main event loop so autocmds run correctly
+    autocmd VimResume,VimEnter * call timer_start(0, 's:OnResume')
     " set modified marker if not all files were saved
     autocmd VimSuspend * if !empty($SIVIM_MARK_MODIFIED)
             \| if getbufinfo({  'buflisted': 1 })->filter({ _, buf -> buf.changed })->len() > 0
@@ -14,10 +19,3 @@ augroup Suspension
             \| endif
         \| endif
 augroup END
-
-function! s:SivOpen(file)
-    execute 'edit ' . a:file
-    " fix some problem with ft detection
-    filetype detect
-endfunction
-command! -nargs=1 -complete=file SivOpen call s:SivOpen(<q-args>)
